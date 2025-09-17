@@ -697,14 +697,15 @@
                     return;
                 }
                 const tokenId = parseInt(totalSupply) + 1;
-                const imageData = canvas.toDataURL("image/png", 1.0).split(',')[1];
+                const imageData = canvas.toDataURL("image/jpeg", 0.6).split(',')[1];
                 const metadata = {
                     name: `Bored Ape X Club #${tokenId}`,
                     description: "A unique Bored Ape X Club NFT",
-                    image: `data:image/png;base64,${imageData}`,
+                    image: `data:image/jpeg;base64,${imageData}`,
                     attributes: attributes.map((val, i) => ({ trait_type: layerOrder[i], value: val }))
                 };
                 const tokenURI = `data:application/json;base64,${btoa(JSON.stringify(metadata))}`;
+                console.log('tokenURI length:', tokenURI.length);
                 showModal('Minting NFT...');
                 const gasMint = await contract.methods.mintNFT(tokenURI, attributes).estimateGas({ from: accounts[0] }).catch(() => 600000);
                 const tx = await contract.methods.mintNFT(tokenURI, attributes).send({ from: accounts[0], gas: Math.floor(gasMint * 1.2) });
