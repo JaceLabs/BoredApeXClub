@@ -90,11 +90,12 @@
         .cycle-btn:hover { 
             transform: scale(1.05); 
         }
-        select { 
+        select, input[type="number"] { 
             margin-top: 5px; 
             padding: 5px; 
             font-size: 12px; 
             width: 100%; 
+            max-width: 140px; 
             border-radius: 5px; 
             background: #333; 
             color: #fff; 
@@ -104,6 +105,8 @@
             display: flex; 
             gap: 15px; 
             margin: 20px 0; 
+            flex-wrap: wrap; 
+            justify-content: center; 
         }
         .action-btn { 
             padding: 10px 20px; 
@@ -217,7 +220,7 @@
             .control-group { min-width: 100px; }
             label { font-size: 12px; }
             .layer-value { font-size: 10px; }
-            .cycle-btn, select { font-size: 10px; padding: 3px 6px; }
+            .cycle-btn, select, input[type="number"] { font-size: 10px; padding: 3px 6px; }
             .action-btn { padding: 8px 16px; font-size: 14px; }
             .wallet-info, .mint-status { font-size: 14px; }
             .modal-content { max-width: 90%; padding: 15px; }
@@ -321,6 +324,19 @@
     </div>
     <canvas id="nftCanvas" width="512" height="512"></canvas>
     <div class="action-buttons">
+        <div class="control-group">
+            <label>Image Size</label>
+            <select id="imageSizeSelect" onchange="applyImageSettings()">
+                <option value="150">150x150</option>
+                <option value="256">256x256</option>
+                <option value="512" selected>512x512</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>JPEG Quality (0.0-1.0)</label>
+            <input type="number" id="jpegQualityInput" value="0.9" min="0" max="1" step="0.1">
+        </div>
+        <button id="applySettingsBtn" class="action-btn" onclick="applyImageSettings()">Apply Settings</button>
         <button id="randomizeBtn" class="action-btn" onclick="randomizeNFT()">Randomize</button>
         <button id="downloadBtn" class="action-btn" onclick="downloadNFT()">Download PNG</button>
         <button id="mintBtn" class="action-btn" onclick="mintNFT()" disabled>Mint NFT (1000 X0)</button>
@@ -543,6 +559,25 @@
             document.getElementById('modal').style.display = 'none';
         }
 
+        async function applyImageSettings() {
+            const sizeSelect = document.getElementById('imageSizeSelect');
+            const qualityInput = document.getElementById('jpegQualityInput');
+            const size = parseInt(sizeSelect.value);
+            const quality = parseFloat(qualityInput.value);
+
+            if (isNaN(quality) || quality < 0 || quality > 1) {
+                showModal('JPEG Quality must be between 0.0 and 1.0');
+                qualityInput.value = 0.9;
+                return;
+            }
+
+            canvas.width = size;
+            canvas.height = size;
+            document.getElementById('nftCanvas').style.maxWidth = `${size}px`;
+            await updateNFT();
+            showModal(`Image settings applied: ${size}x${size}, Quality: ${quality}`);
+        }
+
         async function connectWallet() {
             const connectButton = document.getElementById('connectWalletBtn');
             if (!window.ethereum) {
@@ -667,6 +702,14 @@
                 return;
             }
             const mintButton = document.getElementById('mintBtn');
+            const size = parseInt(document.getElementById('imageSizeSelect').value);
+            const qualityInput = document.getElementById('jpegQualityInput');
+            const quality = parseFloat(qualityInput.value);
+            if (isNaN(quality) || quality < 0 || quality > 1) {
+                showModal('JPEG Quality must be between 0.0 and 1.0');
+                qualityInput.value = 0.9;
+                return;
+            }
             mintButton.classList.add('loading');
             mintButton.disabled = true;
             try {
@@ -697,7 +740,7 @@
                     return;
                 }
                 const tokenId = parseInt(totalSupply) + 1;
-                const imageData = canvas.toDataURL("image/jpeg", 0.9).split(',')[1];
+                const imageData = canvas.toDataURL("image/jpeg", quality).split(',')[1];
                 const metadata = {
                     name: `Bored Ape X Club #${tokenId}`,
                     description: "A unique Bored Ape X Club NFT",
@@ -705,6 +748,7 @@
                     attributes: attributes.map((val, i) => ({ trait_type: layerOrder[i], value: val }))
                 };
                 const tokenURI = `data:application/json;base64,${btoa(JSON.stringify(metadata))}`;
+                console.log('Image Size:', size, 'Quality:', quality);
                 console.log('tokenURI length:', tokenURI.length);
                 showModal('Minting NFT...');
                 const gasMint = await contract.methods.mintNFT(tokenURI, attributes).estimateGas({ from: accounts[0] }).catch(() => 600000);
