@@ -6,38 +6,211 @@
     <title>Bored Ape X Club</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <style>
-        body { display: flex; flex-direction: column; align-items: center; font-family: 'Montserrat', Arial, sans-serif; background: linear-gradient(135deg, #1a1a1a, #2d2d2d); margin: 0; padding: 20px; min-height: 100vh; color: #fff; }
-        #nftCanvas { border-radius: 15px; box-shadow: 0 8px 20px rgba(0, 255, 157, 0.3); background-color: #fff; width: 100%; max-width: 300px; height: auto; }
-        .header { text-align: center; margin-bottom: 20px; }
-        h1 { font-size: 48px; color: #00ff9d; text-shadow: 0 0 10px rgba(0, 255, 157, 0.5); }
-        .wallet-info { margin: 10px 0; font-size: 16px; }
-        .mint-status { font-size: 14px; color: #00ff9d; }
-        .controls { margin: 20px 0; display: flex; flex-wrap: nowrap; gap: 10px; width: 100%; max-width: 1200px; overflow-x: auto; }
-        .control-group { display: flex; flex-direction: column; align-items: center; min-width: 140px; }
-        label { margin-bottom: 5px; font-weight: bold; font-size: 14px; color: #00ff9d; }
-        .layer-value { margin-bottom: 5px; font-size: 12px; text-align: center; color: #fff; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .cycle-buttons { display: flex; gap: 5px; }
-        .cycle-btn { padding: 5px 10px; font-size: 12px; background: linear-gradient(45deg, #00ff9d, #00cc7a); color: #1a1a1a; border: none; border-radius: 5px; cursor: pointer; transition: transform 0.2s; }
-        .cycle-btn:hover { transform: scale(1.05); }
-        select { margin-top: 5px; padding: 5px; font-size: 12px; width: 100%; border-radius: 5px; background: #333; color: #fff; border: 1px solid #00ff9d; }
-        .action-buttons { display: flex; gap: 15px; margin: 20px 0; }
-        .action-btn { padding: 10px 20px; font-size: 16px; background: linear-gradient(45deg, #00ff9d, #00cc7a); color: #1a1a1a; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
-        .action-btn:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(0, 255, 157, 0.7); }
-        .action-btn:disabled { background: #666; cursor: not-allowed; }
-        .action-btn.loading { opacity: 0.7; pointer-events: none; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; }
-        .modal-content { background: #2d2d2d; padding: 20px; border-radius: 15px; text-align: center; color: #fff; max-width: 350px; border: 2px solid #00ff9d; box-shadow: 0 0 20px rgba(0, 255, 157, 0.5); }
-        .modal-content p { margin-bottom: 15px; font-size: 18px; }
-        .modal-content button { padding: 10px 20px; background: #00ff9d; color: #1a1a1a; border: none; border-radius: 10px; cursor: pointer; }
-        .nft-viewer { margin-top: 30px; width: 100%; max-width: 800px; }
-        .nft-viewer h2 { font-size: 32px; color: #00ff9d; text-align: center; }
-        #nftList { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; justify-content: center; }
-        .nft-card { text-align: center; background: #333; padding: 10px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 255, 157, 0.2); display: flex; flex-direction: column; align-items: center; }
-        .nft-card img { width: 100%; max-width: 150px; height: auto; border-radius: 5px; }
-        .nft-card p { font-size: 14px; margin: 5px 0; }
-        .nft-card input { width: 100%; padding: 5px; margin-bottom: 5px; border-radius: 5px; border: 1px solid #00ff9d; background: #1a1a1a; color: #fff; font-size: 12px; }
-        .nft-card .button-group { display: flex; gap: 5px; width: 100%; justify-content: center; }
-        .nft-card .action-btn { padding: 6px 12px; font-size: 12px; flex: 1; }
+        body { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            font-family: 'Montserrat', Arial, sans-serif; 
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d); 
+            margin: 0; 
+            padding: 20px; 
+            min-height: 100vh; 
+            color: #fff; 
+        }
+        #nftCanvas { 
+            border-radius: 15px; 
+            box-shadow: 0 8px 20px rgba(0, 255, 157, 0.3); 
+            background-color: #fff; 
+            width: 100%; 
+            max-width: 300px; 
+            height: auto; 
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 20px; 
+        }
+        h1 { 
+            font-size: 48px; 
+            color: #00ff9d; 
+            text-shadow: 0 0 10px rgba(0, 255, 157, 0.5); 
+        }
+        .wallet-info { 
+            margin: 10px 0; 
+            font-size: 16px; 
+        }
+        .mint-status { 
+            font-size: 14px; 
+            color: #00ff9d; 
+        }
+        .controls { 
+            margin: 20px 0; 
+            display: flex; 
+            flex-wrap: nowrap; 
+            gap: 10px; 
+            width: 100%; 
+            max-width: 1200px; 
+            overflow-x: auto; 
+        }
+        .control-group { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-width: 140px; 
+        }
+        label { 
+            margin-bottom: 5px; 
+            font-weight: bold; 
+            font-size: 14px; 
+            color: #00ff9d; 
+        }
+        .layer-value { 
+            margin-bottom: 5px; 
+            font-size: 12px; 
+            text-align: center; 
+            color: #fff; 
+            max-width: 100%; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            white-space: nowrap; 
+        }
+        .cycle-buttons { 
+            display: flex; 
+            gap: 5px; 
+        }
+        .cycle-btn { 
+            padding: 5px 10px; 
+            font-size: 12px; 
+            background: linear-gradient(45deg, #00ff9d, #00cc7a); 
+            color: #1a1a1a; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            transition: transform 0.2s; 
+        }
+        .cycle-btn:hover { 
+            transform: scale(1.05); 
+        }
+        select { 
+            margin-top: 5px; 
+            padding: 5px; 
+            font-size: 12px; 
+            width: 100%; 
+            border-radius: 5px; 
+            background: #333; 
+            color: #fff; 
+            border: 1px solid #00ff9d; 
+        }
+        .action-buttons { 
+            display: flex; 
+            gap: 15px; 
+            margin: 20px 0; 
+        }
+        .action-btn { 
+            padding: 10px 20px; 
+            font-size: 16px; 
+            background: linear-gradient(45deg, #00ff9d, #00cc7a); 
+            color: #1a1a1a; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            transition: transform 0.2s, box-shadow 0.2s; 
+        }
+        .action-btn:hover { 
+            transform: scale(1.05); 
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.7); 
+        }
+        .action-btn:disabled { 
+            background: #666; 
+            cursor: not-allowed; 
+        }
+        .action-btn.loading { 
+            opacity: 0.7; 
+            pointer-events: none; 
+        }
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.8); 
+            justify-content: center; 
+            align-items: center; 
+        }
+        .modal-content { 
+            background: #2d2d2d; 
+            padding: 20px; 
+            border-radius: 15px; 
+            text-align: center; 
+            color: #fff; 
+            max-width: 350px; 
+            border: 2px solid #00ff9d; 
+            box-shadow: 0 0 20px rgba(0, 255, 157, 0.5); 
+        }
+        .modal-content p { 
+            margin-bottom: 15px; 
+            font-size: 18px; 
+        }
+        .modal-content button { 
+            padding: 10px 20px; 
+            background: #00ff9d; 
+            color: #1a1a1a; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+        }
+        .nft-viewer { 
+            margin-top: 30px; 
+            width: 100%; 
+            max-width: 800px; 
+        }
+        .nft-viewer h2 { 
+            font-size: 32px; 
+            color: #00ff9d; 
+            text-align: center; 
+        }
+        #nftList { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 20px; 
+            justify-content: center; 
+        }
+        .nft-card { 
+            text-align: center; 
+            background: #333; 
+            padding: 10px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 10px rgba(0, 255, 157, 0.2); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        .nft-card img { 
+            width: 100%; 
+            max-width: 150px; 
+            height: auto; 
+            border-radius: 5px; 
+        }
+        .nft-card p { 
+            font-size: 14px; 
+            margin: 5px 0; 
+        }
+        .nft-card input { 
+            width: 100%; 
+            padding: 5px; 
+            margin-bottom: 5px; 
+            border-radius: 5px; 
+            border: 1px solid #00ff9d; 
+            background: #1a1a1a; 
+            color: #fff; 
+            font-size: 12px; 
+        }
+        .nft-card .action-btn { 
+            padding: 6px 12px; 
+            font-size: 12px; 
+            width: 100%; 
+        }
         @media (max-width: 768px) {
             h1 { font-size: 32px; }
             .controls { flex-wrap: wrap; gap: 8px; }
@@ -150,7 +323,7 @@
     <div class="action-buttons">
         <button id="randomizeBtn" class="action-btn" onclick="randomizeNFT()">Randomize</button>
         <button id="downloadBtn" class="action-btn" onclick="downloadNFT()">Download PNG</button>
-        <button id="mintBtn" class="action-btn" onclick="mintNFT()" disabled>Mint NFT</button>
+        <button id="mintBtn" class="action-btn" onclick="mintNFT()" disabled>Mint NFT (1000 X0)</button>
     </div>
     <div id="modal" class="modal">
         <div class="modal-content">
@@ -181,6 +354,7 @@
         let web3, accounts, contract, x0Token;
         const CONTRACT_ADDRESS = "0x38CA7052f5e42E18f266930A5fFcc0eeB56a9F62";
         const X0_TOKEN_ADDRESS = "0x428dC4b69A05C128966f2A03693dEAac409F1EC5";
+        const MINT_PRICE = "1000000000000000000000"; // 1000 X0 (18 decimals)
         const CONTRACT_ABI = [
             {
                 "inputs":[{"internalType":"string","name":"name_","type":"string"},{"internalType":"string","name":"symbol_","type":"string"}],"stateMutability":"nonpayable","type":"constructor"
@@ -422,9 +596,8 @@
                 const mintedCount = await contract.methods.mintedCount(accounts[0]).call();
                 document.getElementById('mintStatus').innerText = `${mintedCount}/Unlimited`;
                 const balance = await x0Token.methods.balanceOf(accounts[0]).call();
-                const allowance = await x0Token.methods.allowance(accounts[0], CONTRACT_ADDRESS).call();
                 const cost = await contract.methods.cost().call();
-                document.getElementById('mintBtn').disabled = (balance < cost);
+                document.getElementById('mintBtn').disabled = (BigInt(balance) < BigInt(cost));
             }
         }
 
@@ -433,19 +606,32 @@
             document.getElementById(`${layer.toLowerCase()}Select`).value = currentIndices[layer];
         }
 
-        async function drawLayer(layerName, layerValue, context, size) {
+        async function drawLayer(layerName, layerValue) {
             if (layerValue === "None") return Promise.resolve();
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
                 const img = new Image();
                 img.src = `images/${layerName}/${layerValue}.png`;
-                img.onload = () => { context.drawImage(img, 0, 0, size, size); resolve(); };
-                img.onerror = () => resolve();
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    resolve();
+                };
+                img.onerror = () => {
+                    showModal(`Failed to load image: images/${layerName}/${layerValue}.png`);
+                    reject(new Error(`Failed to load image: images/${layerName}/${layerValue}.png`));
+                };
             });
         }
 
         async function updateNFT() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (const layer of layerOrder) await drawLayer(layer, layers[layer][currentIndices[layer]], ctx, 300);
+            for (const layer of layerOrder) {
+                const layerValue = layers[layer][currentIndices[layer]];
+                try {
+                    await drawLayer(layer, layerValue);
+                } catch (error) {
+                    console.error(error.message);
+                }
+            }
         }
 
         function cycleLayer(layer, direction) {
@@ -490,12 +676,12 @@
                     return;
                 }
                 const cost = await contract.methods.cost().call();
-                const allowance = await x0Token.methods.allowance(accounts[0], CONTRACT_ADDRESS).call();
                 const balance = await x0Token.methods.balanceOf(accounts[0]).call();
                 if (BigInt(balance) < BigInt(cost)) {
                     showModal('Minting failed: Insufficient X0 token balance.');
                     return;
                 }
+                const allowance = await x0Token.methods.allowance(accounts[0], CONTRACT_ADDRESS).call();
                 if (BigInt(allowance) < BigInt(cost)) {
                     showModal('Approving X0 tokens...');
                     const maxAllowance = BigInt(2) ** BigInt(256) - BigInt(1);
@@ -504,19 +690,22 @@
                     showModal('X0 tokens approved, minting NFT...');
                 }
                 const attributes = layerOrder.map(layer => layers[layer][currentIndices[layer]]);
-                if (attributes.length !== 7) {
-                    showModal('Minting failed: Exactly 7 attributes required.');
+                const attrHash = web3.utils.keccak256(web3.eth.abi.encodeParameter('string[]', attributes));
+                const isUsed = await contract.methods.usedAttributeCombinations(attrHash).call();
+                if (isUsed) {
+                    showModal('This attribute combination has already been minted. Please choose a different combination.');
                     return;
                 }
                 const tokenId = parseInt(totalSupply) + 1;
-                const image = canvas.toDataURL('image/png', 1.0);
+                const imageData = canvas.toDataURL("image/png", 1.0).split(',')[1];
                 const metadata = {
                     name: `Bored Ape X Club #${tokenId}`,
                     description: "A unique Bored Ape X Club NFT",
-                    image: image,
+                    image: `data:image/png;base64,${imageData}`,
                     attributes: attributes.map((val, i) => ({ trait_type: layerOrder[i], value: val }))
                 };
                 const tokenURI = `data:application/json;base64,${btoa(JSON.stringify(metadata))}`;
+                showModal('Minting NFT...');
                 const gasMint = await contract.methods.mintNFT(tokenURI, attributes).estimateGas({ from: accounts[0] }).catch(() => 600000);
                 const tx = await contract.methods.mintNFT(tokenURI, attributes).send({ from: accounts[0], gas: Math.floor(gasMint * 1.2) });
                 showModal(`NFT minted successfully! <a href="${xLayer.blockExplorerUrls[0]}/tx/${tx.transactionHash}" target="_blank">View on Explorer</a>`);
@@ -539,67 +728,47 @@
         }
 
         async function fetchOwnedNFTs() {
-            if (!web3 || !contract || !accounts) return;
+            if (!web3 || !contract || !accounts) {
+                showModal('Please connect your wallet first!');
+                return;
+            }
             const nftList = document.getElementById('nftList');
             nftList.innerHTML = '<p>Loading your NFTs...</p>';
             try {
                 const tokenIds = await contract.methods.walletOfOwner(accounts[0]).call();
                 if (tokenIds.length === 0) {
-                    nftList.innerHTML = '<p>You don’t own any NFTs yet.</p>';
+                    nftList.innerHTML = '<p>You don’t own any Bored Ape X Club NFTs yet.</p>';
                     return;
                 }
                 nftList.innerHTML = '';
                 for (const tokenId of tokenIds) {
                     const tokenURI = await contract.methods.tokenURI(tokenId).call();
-                    await renderNFT(tokenId, tokenURI);
+                    await displayNFT(tokenId, tokenURI);
                 }
             } catch (error) {
-                nftList.innerHTML = '<p>Error loading NFTs: ' + error.message + '</p>';
+                showModal('Failed to fetch NFTs: ' + error.message);
+                nftList.innerHTML = '<p>Error loading NFTs.</p>';
             }
         }
 
-        async function renderNFT(tokenId, tokenURI) {
+        async function displayNFT(tokenId, tokenURI) {
             const nftList = document.getElementById('nftList');
             let metadata;
             if (tokenURI.startsWith('data:application/json;base64,')) {
                 const base64Data = tokenURI.split(',')[1];
                 metadata = JSON.parse(atob(base64Data));
             } else {
-                metadata = { name: `Token #${tokenId}`, attributes: [] };
-            }
-            const previewCanvas = document.createElement('canvas');
-            previewCanvas.width = 150;
-            previewCanvas.height = 150;
-            const previewCtx = previewCanvas.getContext('2d');
-            const fullCanvas = document.createElement('canvas');
-            fullCanvas.width = 300;
-            fullCanvas.height = 300;
-            const fullCtx = fullCanvas.getContext('2d');
-            for (const attr of metadata.attributes) {
-                const layerName = attr.trait_type;
-                const layerValue = attr.value;
-                await drawLayer(layerName, layerValue, previewCtx, 150);
-                await drawLayer(layerName, layerValue, fullCtx, 300);
+                metadata = { name: `Bored Ape X Club #${tokenId}`, image: 'Unknown' };
             }
             const nftDiv = document.createElement('div');
             nftDiv.className = 'nft-card';
             nftDiv.innerHTML = `
-                <img src="${previewCanvas.toDataURL('image/png', 1.0)}" alt="${metadata.name}">
+                <img src="${metadata.image}" alt="${metadata.name}">
                 <p>${metadata.name} (ID: ${tokenId})</p>
                 <input type="text" id="transferAddress${tokenId}" placeholder="Recipient Address">
-                <div class="button-group">
-                    <button class="action-btn" onclick="transferNFT(${tokenId})">Transfer</button>
-                    <button class="action-btn" onclick="downloadFullNFT('${fullCanvas.toDataURL('image/png', 1.0)}', ${tokenId})">Download</button>
-                </div>
+                <button class="action-btn" onclick="transferNFT(${tokenId})">Transfer</button>
             `;
             nftList.appendChild(nftDiv);
-        }
-
-        function downloadFullNFT(dataURL, tokenId) {
-            const link = document.createElement("a");
-            link.download = `BoredApeXClub_${tokenId}.png`;
-            link.href = dataURL;
-            link.click();
         }
 
         async function transferNFT(tokenId) {
@@ -612,8 +781,8 @@
                 showModal('Invalid Ethereum address!');
                 return;
             }
-            showModal('Transferring NFT...');
             try {
+                showModal('Transferring NFT...');
                 const gas = await contract.methods.safeTransferFrom(accounts[0], transferAddress, tokenId).estimateGas({ from: accounts[0] }).catch(() => 200000);
                 const tx = await contract.methods.safeTransferFrom(accounts[0], transferAddress, tokenId).send({ from: accounts[0], gas: Math.floor(gas * 1.2) });
                 showModal(`NFT transferred successfully! <a href="${xLayer.blockExplorerUrls[0]}/tx/${tx.transactionHash}" target="_blank">View on Explorer</a>`);
@@ -629,18 +798,17 @@
             if (!window.ethereum) showModal('No wallet detected. Install <a href="https://metamask.io" target="_blank">MetaMask</a>.');
         };
 
-        window.ethereum?.on('chainChanged', (chainId) => {
-            if (parseInt(chainId, 16) !== 196) {
-                showModal('Switched to wrong network. Reconnect to X Layer.');
-                web3 = null; contract = null; accounts = null; x0Token = null; updateWalletInfo();
-            } else connectWallet();
+        window.ethereum?.on('chainChanged', () => {
+            window.location.reload();
         });
 
         window.ethereum?.on('accountsChanged', (newAccounts) => {
-            if (newAccounts.length) connectWallet();
-            else {
-                showModal('Wallet disconnected. Please reconnect.');
-                web3 = null; contract = null; accounts = null; x0Token = null; updateWalletInfo();
+            accounts = newAccounts;
+            updateWalletInfo();
+            if (newAccounts.length === 0) {
+                document.getElementById('mintBtn').disabled = true;
+            } else {
+                connectWallet();
             }
         });
 
